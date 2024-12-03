@@ -9,7 +9,13 @@ namespace JwtRoleAuthentication.Data;
 public class ApplicationDbContext : IdentityUserContext<ApplicationUser>
 {
     public DbSet<Page> Pages => Set<Page>();
-    
+
+    public DbSet<Barang> Barangs => Set<Barang>();
+
+    public DbSet<Kategori> kategoris => Set<Kategori>();
+
+    public DbSet<Transaksi> transaksis => Set<Transaksi>();
+
     public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {

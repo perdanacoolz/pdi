@@ -15,6 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
+     .AllowAnyHeader());
+});
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -51,7 +56,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 // Add DB Contexts
 // Move the connection string to user secrets for release
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
-    opt.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=devpass"));
+    opt.UseNpgsql("Host=localhost;Database=pdi;Username=postgres;Password=password"));
 
 // Register our TokenService dependency
 builder.Services.AddScoped<TokenService, TokenService>();
@@ -110,7 +115,7 @@ builder.Services.AddAuthentication(options =>
 
 // Build the app
 var app = builder.Build();
-
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
