@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using JwtRoleAuthentication.Dto;
 
 namespace JwtRoleAuthentication.Controllers;
 
@@ -14,77 +15,38 @@ public class POSController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public POSController(ILogger<PagesController> logger, ApplicationDbContext dbContext)
+    public POSController(ILogger<POSController> logger, ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("new")]
-    public async Task<ActionResult<Page>> CreatePage(PageDto pageDto)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Transaksi>>> GetTransaksi()
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var page = new Page
-        {
-            Id = pageDto.Id,
-            Title = pageDto.Title,
-            Author = pageDto.Author,
-            Body = pageDto.Body,
-        };
-
-        _dbContext.Pages.Add(page);
-        await _dbContext.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetPage), new { id = page.Id }, page);
+        return await _dbContext.transaksis.ToListAsync();
     }
 
-
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<PageDto>> GetPage(int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Transaksi>> GetTransaksi(int id)
     {
-        var page = await _dbContext.Pages.FindAsync(id);
+        var customer = await _dbContext.transaksis.FindAsync(id);
 
-        if (page is null)
+        if (customer == null)
         {
             return NotFound();
         }
 
-        var pageDto = new PageDto
-        {
-            Id = page.Id,
-            Author = page.Author,
-            Body = page.Body,
-            Title = page.Title
-        };
-
-        return pageDto;
+        return customer;
     }
 
-
-    [HttpGet]
-    public async Task<PagesDto> ListPages()
+    [HttpPost]
+    public async Task<ActionResult<Transaksi>> PostTransaksi(Transaksi trans)
     {
-        var pagesFromDb = await _dbContext.Pages.ToListAsync();
+        _dbContext.transaksis.Add(trans);
+        await _dbContext.SaveChangesAsync();
 
-        var pagesDto = new PagesDto();
-
-        foreach (var page in pagesFromDb)
-        {
-            var pageDto = new PageDto
-            {
-                Id = page.Id,
-                Author = page.Author,
-                Body = page.Body,
-                Title = page.Title
-            };
-
-            pagesDto.Pages.Add(pageDto);
-        }
-
-        return pagesDto;
+        return CreatedAtAction("GetTransaksi", new { id = trans.transactionId }, trans);
     }
+
 }

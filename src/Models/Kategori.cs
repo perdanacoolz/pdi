@@ -14,6 +14,8 @@ namespace JwtRoleAuthentication.Models
 
         public int BarangId { get; set; }
         public string NamaBarang { get; set; }
- 
+
+        public List<Transaksi> Transactions { get; set; }
+
     }
 }

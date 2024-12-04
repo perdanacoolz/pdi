@@ -24,6 +24,16 @@ public class ApplicationDbContext : IdentityUserContext<ApplicationUser>
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Transaksi>()
+               .HasOne(t => t.barang)
+               .WithMany(c => c.Transactions)
+               .HasForeignKey(t => t.BarangId);
+
+        modelBuilder.Entity<Transaksi>()
+            .HasOne(t => t.kategori)
+            .WithMany(f => f.Transactions)
+            .HasForeignKey(t => t.KategoriID);
+
         base.OnModelCreating(modelBuilder);
     }
 }

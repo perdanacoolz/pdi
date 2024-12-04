@@ -15,5 +15,7 @@ namespace JwtRoleAuthentication.Models
         public string Kategori { get; set; }
 
         public string GambarBarang { get; set; }
+
+        public List<Transaksi> Transactions { get; set; }
     }
 }

@@ -4,12 +4,12 @@
     {
 
         public required int transactionId { get; set; }
-        public required string BarangId { get; set; }
-        public required string KategoriID { get; set; }
+        public required int BarangId { get; set; }
+        public required int KategoriID { get; set; }
 
-        public required string Jmlitem { get; set; }
-        public required string Hargaitem { get; set; }
-        public required string Totalharga { get; set; }
+        public required int Jmlitem { get; set; }
+        public required int Hargaitem { get; set; }
+        public required int Totalharga { get; set; }
 
         public required DateTime transactionDate { get; set; }
     }
