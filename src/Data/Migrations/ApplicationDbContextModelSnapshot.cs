@@ -130,13 +130,6 @@ namespace JwtRoleAuthentication.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KategoriID"));
 
-                    b.Property<int>("BarangId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("NamaBarang")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("NamaKategori")
                         .IsRequired()
                         .HasColumnType("text");

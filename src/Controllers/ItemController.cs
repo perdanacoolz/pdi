@@ -46,6 +46,57 @@ public class ItemController : ControllerBase
         return CreatedAtAction(nameof(GetPage), new { id = page.BarangId }, page);
     }
 
+    //[HttpPut("{id}")]
+    //public async Task<IActionResult> PutBarang(int id, Barang brg)
+    //{
+    //    if (id != brg.BarangId)
+    //    {
+    //        return BadRequest();
+    //    }
+
+    //    _dbContext.Entry(brg).State = EntityState.Modified;
+
+    //    try
+    //    {
+    //        await _dbContext.SaveChangesAsync();
+    //    }
+    //    catch (DbUpdateConcurrencyException)
+    //    {
+    //        if (!BarangExists(id))
+    //        {
+    //            return NotFound();
+    //        }
+    //        else
+    //        {
+    //            throw;
+    //        }
+    //    }
+
+    //    return NoContent();
+    //}
+
+    //private bool BarangExists(int id)
+    //{
+    //    return _dbContext.Barangs.Any(e => e.BarangId == id);
+    //}
+
+    [HttpPut]
+    public async Task<IActionResult> Put(Barang productData)
+    {
+        if (productData == null || productData.BarangId == 0)
+            return BadRequest();
+
+        var product = await _dbContext.Barangs.FindAsync(productData.BarangId);
+        if (product == null)
+            return NotFound();
+        product.NamaBarang = productData.NamaBarang;
+        product.Harga = productData.Harga;
+        product.StokAwal = productData.StokAwal;
+        product.Kategori = productData.Kategori;
+        product.GambarBarang = productData.GambarBarang;
+        await _dbContext.SaveChangesAsync();
+        return Ok();
+    }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<BarangDto>> GetPage(int id)

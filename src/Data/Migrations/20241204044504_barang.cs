@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JwtRoleAuthentication.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class barang : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,36 @@ namespace JwtRoleAuthentication.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Barang",
+                columns: table => new
+                {
+                    BarangId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NamaBarang = table.Column<string>(type: "text", nullable: false),
+                    Harga = table.Column<string>(type: "text", nullable: false),
+                    StokAwal = table.Column<string>(type: "text", nullable: false),
+                    Kategori = table.Column<string>(type: "text", nullable: false),
+                    GambarBarang = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Barang", x => x.BarangId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Kategori",
+                columns: table => new
+                {
+                    KategoriID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NamaKategori = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Kategori", x => x.KategoriID);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,6 +144,36 @@ namespace JwtRoleAuthentication.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Transaksi",
+                columns: table => new
+                {
+                    transactionId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BarangId = table.Column<int>(type: "integer", nullable: false),
+                    KategoriID = table.Column<int>(type: "integer", nullable: false),
+                    Hargaitem = table.Column<int>(type: "integer", nullable: false),
+                    Totalharga = table.Column<int>(type: "integer", nullable: false),
+                    JmlItem = table.Column<int>(type: "integer", nullable: false),
+                    transactionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transaksi", x => x.transactionId);
+                    table.ForeignKey(
+                        name: "FK_Transaksi_Barang_BarangId",
+                        column: x => x.BarangId,
+                        principalTable: "Barang",
+                        principalColumn: "BarangId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transaksi_Kategori_KategoriID",
+                        column: x => x.KategoriID,
+                        principalTable: "Kategori",
+                        principalColumn: "KategoriID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
                 table: "AspNetUserClaims",
@@ -134,6 +194,16 @@ namespace JwtRoleAuthentication.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaksi_BarangId",
+                table: "Transaksi",
+                column: "BarangId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaksi_KategoriID",
+                table: "Transaksi",
+                column: "KategoriID");
         }
 
         /// <inheritdoc />
@@ -152,7 +222,16 @@ namespace JwtRoleAuthentication.Data.Migrations
                 name: "Pages");
 
             migrationBuilder.DropTable(
+                name: "Transaksi");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Barang");
+
+            migrationBuilder.DropTable(
+                name: "Kategori");
         }
     }
 }

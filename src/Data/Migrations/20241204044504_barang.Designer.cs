@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JwtRoleAuthentication.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231125225221_Initial")]
-    partial class Initial
+    [Migration("20241204044504_barang")]
+    partial class barang
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,6 +92,56 @@ namespace JwtRoleAuthentication.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("JwtRoleAuthentication.Models.Barang", b =>
+                {
+                    b.Property<int>("BarangId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BarangId"));
+
+                    b.Property<string>("GambarBarang")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Harga")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Kategori")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NamaBarang")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("StokAwal")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("BarangId");
+
+                    b.ToTable("Barang");
+                });
+
+            modelBuilder.Entity("JwtRoleAuthentication.Models.Kategori", b =>
+                {
+                    b.Property<int>("KategoriID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KategoriID"));
+
+                    b.Property<string>("NamaKategori")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("KategoriID");
+
+                    b.ToTable("Kategori");
+                });
+
             modelBuilder.Entity("JwtRoleAuthentication.Models.Page", b =>
                 {
                     b.Property<int>("Id")
@@ -112,6 +162,41 @@ namespace JwtRoleAuthentication.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Pages");
+                });
+
+            modelBuilder.Entity("JwtRoleAuthentication.Models.Transaksi", b =>
+                {
+                    b.Property<int>("transactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("transactionId"));
+
+                    b.Property<int>("BarangId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Hargaitem")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("JmlItem")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("KategoriID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Totalharga")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("transactionDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("transactionId");
+
+                    b.HasIndex("BarangId");
+
+                    b.HasIndex("KategoriID");
+
+                    b.ToTable("Transaksi");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -180,6 +265,25 @@ namespace JwtRoleAuthentication.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("JwtRoleAuthentication.Models.Transaksi", b =>
+                {
+                    b.HasOne("JwtRoleAuthentication.Models.Barang", "barang")
+                        .WithMany("Transactions")
+                        .HasForeignKey("BarangId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JwtRoleAuthentication.Models.Kategori", "kategori")
+                        .WithMany("Transactions")
+                        .HasForeignKey("KategoriID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("barang");
+
+                    b.Navigation("kategori");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("JwtRoleAuthentication.Models.ApplicationUser", null)
@@ -205,6 +309,16 @@ namespace JwtRoleAuthentication.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("JwtRoleAuthentication.Models.Barang", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("JwtRoleAuthentication.Models.Kategori", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }
