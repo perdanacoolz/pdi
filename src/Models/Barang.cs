@@ -9,13 +9,13 @@ namespace JwtRoleAuthentication.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BarangId { get; set; }
-        public string NamaBarang { get; set; }
-        public string Harga { get; set; }
-        public string StokAwal { get; set; }
-        public string Kategori { get; set; }
+        public string? NamaBarang { get; set; }
+        public string? Harga { get; set; }
+        public string? StokAwal { get; set; }
+        public string? Kategori { get; set; }
 
-        public string GambarBarang { get; set; }
+        public string? GambarBarang { get; set; }
 
-        public List<Transaksi> Transactions { get; set; }
+       
     }
 }

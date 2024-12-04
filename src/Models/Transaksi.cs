@@ -10,18 +10,12 @@ namespace JwtRoleAuthentication.Models
             [Key]
             [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             public int transactionId { get; set; }
-            public int BarangId { get; set; }
-            [JsonIgnore]
-            public Barang barang { get; set; }
-            public int KategoriID { get; set; }
-            [JsonIgnore]
-            public Kategori kategori { get; set; }           
+            
             public int Hargaitem { get; set; }
             public int Totalharga { get; set; }
             public int JmlItem { get; set; }
-
-        //field tambahan
-        public DateTime transactionDate { get; set; }
+ 
+            public DateTime transactionDate { get; set; }
 
          
     }

@@ -12,7 +12,7 @@ namespace JwtRoleAuthentication.Models
         public int KategoriID { get; set; }
         public string NamaKategori { get; set; }
 
-        public List<Transaksi> Transactions { get; set; }
+       
 
     }
 }

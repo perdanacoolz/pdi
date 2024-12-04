@@ -16,7 +16,7 @@ public class ItemController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public ItemController(ILogger<PagesController> logger, ApplicationDbContext dbContext)
+    public ItemController(ILogger<ItemController> logger, ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -32,7 +32,7 @@ public class ItemController : ControllerBase
 
         var page = new Barang
         {
-            BarangId = pageDto.BarangId,
+           BarangId = pageDto.BarangId,
             NamaBarang = pageDto.NamaBarang,
             Harga = pageDto.Harga,
             StokAwal = pageDto.StokAwal,
@@ -44,44 +44,10 @@ public class ItemController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetPage), new { id = page.BarangId }, page);
-    }
-
-    //[HttpPut("{id}")]
-    //public async Task<IActionResult> PutBarang(int id, Barang brg)
-    //{
-    //    if (id != brg.BarangId)
-    //    {
-    //        return BadRequest();
-    //    }
-
-    //    _dbContext.Entry(brg).State = EntityState.Modified;
-
-    //    try
-    //    {
-    //        await _dbContext.SaveChangesAsync();
-    //    }
-    //    catch (DbUpdateConcurrencyException)
-    //    {
-    //        if (!BarangExists(id))
-    //        {
-    //            return NotFound();
-    //        }
-    //        else
-    //        {
-    //            throw;
-    //        }
-    //    }
-
-    //    return NoContent();
-    //}
-
-    //private bool BarangExists(int id)
-    //{
-    //    return _dbContext.Barangs.Any(e => e.BarangId == id);
-    //}
+    }    
 
     [HttpPut]
-    public async Task<IActionResult> Put(Barang productData)
+    public async Task<IActionResult> EditPage(Barang productData)
     {
         if (productData == null || productData.BarangId == 0)
             return BadRequest();
@@ -96,6 +62,20 @@ public class ItemController : ControllerBase
         product.GambarBarang = productData.GambarBarang;
         await _dbContext.SaveChangesAsync();
         return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePage(int id)
+    {
+        if (id < 1)
+            return BadRequest();
+        var product = await _dbContext.Barangs.FindAsync(id);
+        if (product == null)
+            return NotFound();
+        _dbContext.Barangs.Remove(product);
+        await _dbContext.SaveChangesAsync();
+        return Ok();
+
     }
 
     [HttpGet("{id:int}")]
